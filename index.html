@@ -17,17 +17,111 @@
   <meta property="og:description" content="Reliable water taxi services and boat rentals in Howe Sound. Serving Squamish, Britannia Beach, Lions Bay, Porto Cove, and Vancouver.">
   <meta property="og:image" content="https://squamishwatertaxi.com/assets/squamish-chief.jpg">
 
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Squamish Water Taxi | Water Taxi & Boat Rentals in Howe Sound BC">
+  <meta name="twitter:description" content="Reliable water taxi services and boat rentals in Howe Sound. Serving Squamish, Britannia Beach, Lions Bay, Porto Cove, and Vancouver.">
+  <meta name="twitter:image" content="https://squamishwatertaxi.com/assets/squamish-chief.jpg">
+
   <!-- Local Business Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": "https://squamishwatertaxi.com/#business",
     "name": "Squamish Water Taxi",
-    "description": "Water taxi services and boat rentals in Howe Sound, British Columbia",
+    "description": "Water taxi services, boat rentals, wildlife tours, fishing charters, and diving excursions in Howe Sound, British Columbia. Serving Squamish, Britannia Beach, Lions Bay, Porto Cove, and Vancouver.",
     "telephone": "+1-604-849-8898",
+    "email": "info@squamishwatertaxi.com",
     "url": "https://squamishwatertaxi.com",
-    "areaServed": ["Squamish", "Britannia Beach", "Lions Bay", "Porto Cove", "Vancouver"],
-    "serviceType": ["Water Taxi", "Boat Rental"]
+    "image": "https://squamishwatertaxi.com/assets/squamish-chief.jpg",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Squamish",
+      "addressRegion": "BC",
+      "addressCountry": "CA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 49.7016,
+      "longitude": -123.1558
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      "opens": "07:00",
+      "closes": "20:00"
+    },
+    "areaServed": [
+      {"@type": "City", "name": "Squamish"},
+      {"@type": "City", "name": "Britannia Beach"},
+      {"@type": "City", "name": "Lions Bay"},
+      {"@type": "City", "name": "Vancouver"}
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Water Taxi & Boat Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Water Taxi Service",
+            "description": "On-demand and pre-booked water taxi service throughout Howe Sound, from Squamish to Britannia Beach, Lions Bay, Porto Cove, and Vancouver."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Bareboat Boat Rental",
+            "description": "18-foot inflatable RIB boat rental with 50 HP engine for self-guided exploration of Howe Sound."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Wildlife Viewing Tours",
+            "description": "Guided wildlife tours on Howe Sound to see seals, eagles, and marine life near Squamish BC."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Fishing Charters",
+            "description": "Fishing charter trips on Howe Sound departing from Squamish, British Columbia."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Echo Falls Shuttle",
+            "description": "Boat shuttle across the Squamish River to Echo Falls trailhead. Round trip service with flexible pickup times."
+          }
+        }
+      ]
+    },
+    "sameAs": []
+  }
+  </script>
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://squamishwatertaxi.com/"
+      }
+    ]
   }
   </script>
 
@@ -77,7 +171,7 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-video-container">
-      <video class="hero-video" autoplay loop muted playsinline>
+      <video class="hero-video" autoplay loop muted playsinline poster="assets/squamish-chief.jpg" aria-label="Aerial footage of a boat cruising through Howe Sound near Squamish BC">
         <source src="assets/hero-video.mp4" type="video/mp4">
       </video>
     </div>
@@ -116,7 +210,7 @@
         <!-- Water Taxi Service -->
         <div class="service-card">
           <div class="service-card-image">
-            <img src="assets/water-taxi.jpg" alt="Water taxi service on Howe Sound">
+            <img src="assets/water-taxi.jpg" alt="Water taxi boat transporting passengers across Howe Sound near Squamish BC with mountain views">
           </div>
           <div class="service-card-content">
             <h3 class="service-card-title">Water Taxi Service</h3>
@@ -153,7 +247,7 @@
         <!-- Boat Rental -->
         <div class="service-card">
           <div class="service-card-image">
-            <img src="assets/boat-rental.jpg" alt="18-foot RIB boat available for rental">
+            <img src="assets/boat-rental.jpg" alt="18-foot inflatable RIB boat available for bareboat rental on Howe Sound Squamish BC">
           </div>
           <div class="service-card-content">
             <h3 class="service-card-title">Boat Rental (Bareboat)</h3>
@@ -365,7 +459,7 @@
 
       <div class="fleet-main">
         <div class="fleet-image">
-          <img src="assets/boat-rental.jpg" alt="18-foot inflatable RIB boat">
+          <img src="assets/boat-rental.jpg" alt="18-foot inflatable RIB boat with 50 HP engine docked in Squamish marina on Howe Sound">
         </div>
         <div class="fleet-content">
           <h3 class="fleet-title">18-Foot Inflatable RIB Boat</h3>
