@@ -42,6 +42,46 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Emergency Response Updates Subscriber Form
+  const subscribeForm = document.getElementById('subscribe-form');
+  if (subscribeForm) {
+    const subscribeMessage = document.getElementById('subscribe-message');
+    const submitBtn = subscribeForm.querySelector('button[type="submit"]');
+
+    subscribeForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(subscribeForm);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Subscribing...';
+      subscribeMessage.textContent = '';
+      subscribeMessage.className = 'emergency-message';
+
+      fetch('https://formsubmit.co/ajax/squamishwatertaxi@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Request failed');
+          return response.json();
+        })
+        .then(() => {
+          subscribeMessage.textContent = "You're on the list! We'll keep you updated on the emergency response plan.";
+          subscribeMessage.classList.add('success');
+          subscribeForm.reset();
+        })
+        .catch(() => {
+          subscribeMessage.textContent = 'Something went wrong. Please try again, or email squamishwatertaxi@gmail.com.';
+          subscribeMessage.classList.add('error');
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Keep Me Updated';
+        });
+    });
+  }
+
   // Set active navigation link
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
