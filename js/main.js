@@ -26,19 +26,36 @@ document.addEventListener('DOMContentLoaded', function() {
   // Contact Form Handling
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
+    const contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
 
       const formData = new FormData(contactForm);
-      const data = Object.fromEntries(formData.entries());
+      formData.append('_subject', 'New Website Inquiry - Squamish Water Taxi');
+      formData.append('_captcha', 'false');
 
-      console.log('Form submitted:', data);
+      contactSubmitBtn.disabled = true;
 
-      // Show success message
-      alert('Thank you for your inquiry! We\'ll get back to you soon.');
-
-      // Reset form
-      contactForm.reset();
+      fetch('https://formsubmit.co/ajax/squamishwatertaxi@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Request failed');
+          return response.json();
+        })
+        .then(() => {
+          alert('Thank you for your inquiry! We\'ll get back to you soon.');
+          contactForm.reset();
+        })
+        .catch(() => {
+          alert('Something went wrong sending your message. Please try again, or call (604) 849-8898 or email squamishwatertaxi@gmail.com.');
+        })
+        .finally(() => {
+          contactSubmitBtn.disabled = false;
+        });
     });
   }
 
