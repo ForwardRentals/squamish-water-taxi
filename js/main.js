@@ -32,19 +32,20 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
 
       const formData = new FormData(contactForm);
-      formData.append('_subject', 'New Website Inquiry - Squamish Water Taxi');
-      formData.append('_captcha', 'false');
+      formData.append('access_key', 'a3e9ea73-311f-492a-85d4-c26d8d5b33bb');
+      formData.append('subject', 'New Website Inquiry - Squamish Water Taxi');
+      formData.append('from_name', 'Squamish Water Taxi Website');
 
       contactSubmitBtn.disabled = true;
 
-      fetch('https://formsubmit.co/ajax/squamishwatertaxi@gmail.com', {
+      fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
         body: formData
       })
-        .then(response => {
-          if (!response.ok) throw new Error('Request failed');
-          return response.json();
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) throw new Error('Request failed');
         })
         .then(() => {
           alert('Thank you for your inquiry! We\'ll get back to you soon.');
@@ -74,16 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
       subscribeMessage.textContent = '';
       subscribeMessage.className = 'emergency-message';
 
-      fetch('https://formsubmit.co/ajax/squamishwatertaxi@gmail.com', {
+      fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
         body: formData
       })
-        .then(response => {
-          if (!response.ok) throw new Error('Request failed');
-          return response.json();
-        })
-        .then(() => {
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) throw new Error('Request failed');
           subscribeMessage.textContent = "You're on the list! We'll keep you updated on the emergency response plan.";
           subscribeMessage.classList.add('success');
           subscribeForm.reset();
