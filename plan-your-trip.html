@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <title>Plan Your Trip &amp; Live Tides | Howe Sound Fare Estimator | Squamish Water Taxi</title>
+  <meta name="description" content="Get a rough water taxi fare estimate between Squamish, Britannia Beach, Porteau Cove, Lions Bay, Horseshoe Bay, and Vancouver, plus live Howe Sound tide conditions from the official CHS Point Atkinson station.">
+  <meta name="keywords" content="Howe Sound water taxi fare, Squamish water taxi cost, Howe Sound tide chart, Point Atkinson tides, water taxi route planner">
+  <meta name="author" content="Squamish Water Taxi">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://squamishwatertaxi.com/plan-your-trip.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://squamishwatertaxi.com/plan-your-trip.html">
+  <meta property="og:title" content="Plan Your Trip &amp; Live Tides | Squamish Water Taxi">
+  <meta property="og:description" content="Interactive route map with rough fare estimates across Howe Sound, plus live tide conditions.">
+  <meta property="og:image" content="https://squamishwatertaxi.com/assets/howe-sound-sunset.jpg">
+  <meta property="og:site_name" content="Squamish Water Taxi">
+  <meta property="og:locale" content="en_CA">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Plan Your Trip &amp; Live Tides | Squamish Water Taxi">
+  <meta name="twitter:description" content="Interactive route map with rough fare estimates across Howe Sound, plus live tide conditions.">
+  <meta name="twitter:image" content="https://squamishwatertaxi.com/assets/howe-sound-sunset.jpg">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://squamishwatertaxi.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Plan Your Trip", "item": "https://squamishwatertaxi.com/plan-your-trip.html"}
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    /* ---- Hero ---- */
+    .plan-hero {
+      position: relative;
+      height: 56vh;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .plan-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.55), rgba(2, 6, 23, 0.9)), url('assets/howe-sound-sunset.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .plan-hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem 1rem;
+      max-width: 760px;
+    }
+    .plan-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: rgba(245, 158, 11, 0.12);
+      border: 1px solid var(--gold-600);
+      color: var(--gold-400);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.375rem 1rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+    }
+    .plan-hero-title {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .plan-hero-title .gold { color: var(--gold-400); }
+    .plan-hero-subtitle {
+      font-size: 1.0625rem;
+      color: var(--slate-300);
+    }
+    @media (min-width: 768px) {
+      .plan-hero-title { font-size: 3.25rem; }
+      .plan-hero-subtitle { font-size: 1.25rem; }
+    }
+
+    /* ---- Layout ---- */
+    .planner-layout {
+      display: grid;
+      gap: 2rem;
+    }
+    @media (min-width: 1024px) {
+      .planner-layout {
+        grid-template-columns: 1.5fr 1fr;
+        align-items: start;
+      }
+      .fare-card { position: sticky; top: 88px; }
+    }
+
+    /* ---- From pills ---- */
+    .from-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .pin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      background-color: var(--slate-800);
+      border: 1px solid var(--slate-700);
+      border-radius: 9999px;
+      color: var(--slate-300);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pin-pill:hover {
+      border-color: var(--gold-600);
+      color: var(--white);
+    }
+    .pin-pill.active {
+      background-color: var(--gold-600);
+      border-color: var(--gold-600);
+      color: #1c1305;
+    }
+    .from-row-label {
+      font-size: 0.8125rem;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      width: 100%;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ---- Map panel (real satellite map via Leaflet) ---- */
+    .map-panel {
+      background-color: var(--slate-900);
+      border: 1px solid var(--slate-800);
+      border-radius: 0.75rem;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    #route-map {
+      width: 100%;
+      height: 460px;
+      background: #0a1420;
+    }
+    @media (min-width: 768px) {
+      #route-map { height: 560px; }
+    }
+    /* soft dark vignette so the real imagery still feels framed in the dark/gold UI */
+    .map-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 60px 20px rgba(2, 6, 23, 0.65);
+      z-index: 450;
+    }
+    .map-instructions {
+      color: var(--slate-500);
+      font-size: 0.875rem;
+      text-align: center;
+      padding: 0.9rem 1.25rem;
+      margin: 0;
+      position: relative;
+      z-index: 460;
+      background-color: var(--slate-900);
+    }
+
+    /* Leaflet chrome, restyled dark/gold */
+    .leaflet-control-zoom a {
+      background-color: var(--slate-900) !important;
+      color: var(--gold-400) !important;
+      border-color: var(--slate-700) !important;
+    }
+    .leaflet-control-zoom a:hover { background-color: var(--slate-800) !important; }
+    .leaflet-control-attribution {
+      background-color: rgba(2, 6, 23, 0.75) !important;
+      color: var(--slate-400) !important;
+    }
+    .leaflet-control-attribution a { color: var(--gold-400) !important; }
+
+    /* Pins */
+    .gold-pin-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--slate-500);
+      border: 2px solid var(--slate-950);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: background-color 0.15s, transform 0.15s;
+    }
+    .gold-pin-icon.is-from,
+    .gold-pin-icon.is-to {
+      background: var(--gold-400);
+      transform: scale(1.2);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.35);
+    }
+    .pin-label-tooltip {
+      background-color: rgba(2, 6, 23, 0.85) !important;
+      border: 1px solid var(--slate-700) !important;
+      color: var(--slate-200) !important;
+      font-size: 0.75rem !important;
+      font-weight: 600;
+      padding: 2px 8px !important;
+      border-radius: 9999px !important;
+      box-shadow: none !important;
+    }
+    .pin-label-tooltip::before { display: none; }
+
+    .boat-marker-icon {
+      cursor: grab;
+    }
+    .boat-marker-icon:active { cursor: grabbing; }
+    .boat-marker-icon svg {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    /* ---- Fare card ---- */
+    .fare-card {
+      background-color: var(--slate-900);
+      border: 1px solid var(--gold-700);
+      border-radius: 0.75rem;
+      padding: 1.75rem;
+    }
+    .fare-route {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .fare-route .arrow { color: var(--gold-400); }
+    .fare-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--gold-300);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-top: -0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .fare-highlight::before { content: "\2728"; }
+    .fare-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--slate-800);
+      color: var(--slate-300);
+      font-size: 0.9375rem;
+    }
+    .fare-row:last-of-type { border-bottom: none; }
+    .fare-row strong { color: var(--white); }
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .stepper button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--slate-600);
+      background-color: var(--slate-800);
+      color: var(--white);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .stepper button:hover { border-color: var(--gold-500); }
+    .toggle-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .toggle-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--slate-700);
+      background-color: var(--slate-800);
+      color: var(--slate-300);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .toggle-btn.active {
+      background-color: var(--gold-600);
+      border-color: var(--gold-600);
+      color: #1c1305;
+    }
+    .fare-total {
+      margin-top: 1.25rem;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.08));
+      border: 1px solid var(--gold-700);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    .fare-total-amount {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--gold-400);
+    }
+    .fare-total-label {
+      color: var(--slate-400);
+      font-size: 0.8125rem;
+      margin-top: 0.25rem;
+    }
+    .fare-disclaimer {
+      color: var(--slate-500);
+      font-size: 0.8125rem;
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+    .fare-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .fare-actions .btn { flex: 1; padding: 0.75rem 1rem; font-size: 0.9375rem; }
+    .fare-placeholder {
+      text-align: center;
+      color: var(--slate-500);
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="3"/>
+          <line x1="12" y1="22" x2="12" y2="8"/>
+          <path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+        </svg>
+        <span>Squamish Water Taxi</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tours.html">Tours</a>
+        <a href="boat-rentals.html">Boat Rentals</a>
+        <a href="plan-your-trip.html" class="active">Plan a Trip</a>
+        <a href="echo-falls.html">Echo Falls</a>
+        <a href="echo-lake.html">Echo Lake</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+        <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="tours.html">Tours</a>
+      <a href="boat-rentals.html">Boat Rentals</a>
+      <a href="plan-your-trip.html" class="active">Plan a Trip</a>
+      <a href="echo-falls.html">Echo Falls</a>
+      <a href="echo-lake.html">Echo Lake</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="plan-hero">
+    <div class="plan-hero-bg"></div>
+    <div class="plan-hero-content">
+      <div class="plan-hero-badge">Route Planner &amp; Live Tides</div>
+      <h1 class="plan-hero-title">Plan Your <span class="gold">Howe Sound</span> Trip</h1>
+      <p class="plan-hero-subtitle">Drag the boat to your destination for a rough fare estimate, then check live tide conditions before you head out on the water.</p>
+    </div>
+  </section>
+
+  <!-- Route Planner -->
+  <main class="section" id="planner">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Route &amp; Fare Estimator</h2>
+        <p class="section-subtitle">Tap a pin for your destination, double-tap a pin to start from there, or drag the boat</p>
+      </div>
+
+      <div class="planner-layout">
+        <div>
+          <div class="from-row" id="from-row">
+            <div class="from-row-label">Departing From</div>
+            <!-- pills injected by JS -->
+          </div>
+
+          <div class="map-panel">
+            <div id="route-map" aria-label="Satellite map of Howe Sound with location pins"></div>
+            <p class="map-instructions" id="map-instructions">Boat is at <strong>Squamish</strong>. Tap a pin for your destination, or double-tap a pin to start from there instead.</p>
+          </div>
+        </div>
+
+        <div class="fare-card">
+          <div id="fare-placeholder" class="fare-placeholder">
+            <p>Choose a destination on the map to see a rough fare estimate.</p>
+          </div>
+
+          <div id="fare-content" style="display:none;">
+            <div class="fare-route">
+              <span id="fare-from">Squamish</span>
+              <span class="arrow">&rarr;</span>
+              <span id="fare-to">&mdash;</span>
+            </div>
+            <p class="fare-highlight" id="fare-highlight" style="display:none;"></p>
+
+            <div class="fare-row">
+              <span>Distance</span>
+              <strong id="fare-distance">&mdash;</strong>
+            </div>
+            <div class="fare-row">
+              <span>Est. cruise time</span>
+              <strong id="fare-time">&mdash;</strong>
+            </div>
+            <div class="fare-row">
+              <span>Passengers</span>
+              <div class="stepper">
+                <button type="button" id="pax-minus" aria-label="Fewer passengers">&minus;</button>
+                <strong id="pax-count">1</strong>
+                <button type="button" id="pax-plus" aria-label="More passengers">&plus;</button>
+              </div>
+            </div>
+            <div class="fare-row">
+              <span>Trip type</span>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" data-trip="one-way">One-way</button>
+                <button type="button" class="toggle-btn" data-trip="round-trip">Round trip</button>
+              </div>
+            </div>
+
+            <div class="fare-total">
+              <div class="fare-total-amount" id="fare-amount">$0</div>
+              <div class="fare-total-label">Rough estimate &mdash; not a quote</div>
+            </div>
+
+            <p class="fare-disclaimer">This is a rough, distance-based estimate only, following the approximate water route shown on the map. Actual pricing depends on conditions, pickup points, and group size, and is always confirmed by phone or text before booking. Includes up to 3 passengers; extra passengers +$25 each (max 6).</p>
+
+            <div class="fare-actions">
+              <a href="tel:+16048498898" class="btn btn-secondary">Call to Book</a>
+              <a href="mailto:squamishwatertaxi@gmail.com" id="request-trip-link" class="btn" style="background-color: var(--gold-600); color: #1c1305;">Request This Trip</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Live Tide Tracker -->
+  <section class="section section-dark" id="tides">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Live Howe Sound Tides</h2>
+        <p class="section-subtitle">Real-time predictions from the official Point Atkinson tide station</p>
+      </div>
+
+      <div class="tide-panel">
+        <div id="tide-loading" class="tide-loading">Loading live tide data&hellip;</div>
+        <div id="tide-error" class="tide-error" style="display:none;"></div>
+
+        <div id="tide-body" style="display:none;">
+          <div class="tide-status-row">
+            <div class="tide-current">
+              <span class="tide-current-value" id="tide-current-value">&mdash;</span>
+              <span class="tide-current-unit">m</span>
+            </div>
+            <span class="tide-trend" id="tide-trend">&mdash;</span>
+          </div>
+
+          <div class="tide-chart-wrap">
+            <svg id="tide-chart" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chart of predicted Howe Sound water levels over the next day and a half"></svg>
+          </div>
+
+          <div class="tide-events" id="tide-events"></div>
+
+          <p class="tide-note">Tide predictions are for <strong>Point Atkinson</strong>, the official Canadian Hydrographic Service reference station at the mouth of Howe Sound &mdash; the closest gauge to our service area. Exact times and heights in Squamish itself can differ slightly. Data from Fisheries and Oceans Canada via the <a href="https://tides.gc.ca/en/stations/07795" target="_blank" rel="noopener noreferrer">official CHS tides site</a>.</p>
+        </div>
+      </div>
+
+      <p style="text-align:center; color: var(--slate-500); font-size: 0.9375rem; margin-top: 2rem;">Tides and weather are part of how we plan every trip &mdash; see our <a href="index.html#safety" style="color: var(--gold-400);">safety commitment</a>.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="3"/>
+              <line x1="12" y1="22" x2="12" y2="8"/>
+              <path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+            </svg>
+            <span>Squamish Water Taxi</span>
+          </div>
+          <p class="footer-description">Your trusted water transportation service in Howe Sound, British Columbia. Offering reliable water taxi services and bareboat rentals.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-section-title">Quick Links</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="squamish-boat-tours.html">Squamish Boat Tours</a>
+            <a href="tours.html">Tours</a>
+            <a href="boat-rentals.html">Boat Rentals</a>
+            <a href="plan-your-trip.html">Plan a Trip</a>
+            <a href="echo-falls.html">Echo Falls</a>
+            <a href="echo-lake.html">Echo Lake</a>
+            <a href="blog.html">Blog</a>
+            <a href="porteau-cove.html">Porteau Cove Tours</a>
+            <a href="contact.html">Contact Us</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-section-title">Contact</h4>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <a href="tel:+16048498898">(604) 849-8898</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <a href="mailto:squamishwatertaxi@gmail.com">squamishwatertaxi@gmail.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Squamish, BC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Squamish Water Taxi. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/trip-planner.js?v=11"></script>
+  <script src="js/tide-tracker.js"></script>
+</body>
+</html>
