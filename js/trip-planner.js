@@ -111,12 +111,12 @@
   ];
 
   /* ---- Fare estimate constants (placeholders - see note above) ---- */
-  var BASE_FEE = 120;
-  var RATE_PER_NM = 9;
+  var BASE_FEE = 300; // calibrated so Porteau Cove -> Anvil Island (6.5 nm) ~ $450, a real fare (Sept 2026)
+  var RATE_PER_NM = 23;
   var EXTRA_PAX_FEE = 25;
   var INCLUDED_PAX = 3;
   var MAX_PAX = 6;
-  var MIN_FARE = 95;
+  var MIN_FARE = 350;
   var ROUND_TRIP_MULTIPLIER = 1.85;
   var CRUISE_SPEED_KNOTS = 18;
   var BOAT_ANIM_MS = 900;
