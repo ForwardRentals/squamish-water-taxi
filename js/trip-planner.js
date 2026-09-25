@@ -520,7 +520,7 @@
         "To: " + to.name + "\n" +
         "Trip type: " + (state.tripType === "round-trip" ? "Round trip" : "One-way") + "\n" +
         "Passengers: " + state.pax + "\n" +
-        "Rough online estimate: $" + fare.toLocaleString() + " (from squamishwatertaxi.com/plan-your-trip.html)\n\n" +
+        "Rough online estimate: $" + fare.toLocaleString() + " (from squamishwatertaxi.com)\n\n" +
         "Preferred date/time: \n";
       reqLink.href =
         "mailto:squamishwatertaxi@gmail.com?subject=" +

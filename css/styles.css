@@ -1587,3 +1587,261 @@ img {
     font-size: 2.75rem;
   }
 }
+
+
+/* ==========================================================================
+   Route & Fare Estimator (homepage interactive map)
+   ========================================================================== */
+/* ---- Layout ---- */
+.planner-layout {
+  display: grid;
+  gap: 2rem;
+}
+@media (min-width: 1024px) {
+  .planner-layout {
+    grid-template-columns: 1.5fr 1fr;
+    align-items: start;
+  }
+  .fare-card { position: sticky; top: 88px; }
+}
+
+/* ---- From pills ---- */
+.from-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+.pin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  background-color: var(--slate-800);
+  border: 1px solid var(--slate-700);
+  border-radius: 9999px;
+  color: var(--slate-300);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pin-pill:hover {
+  border-color: var(--gold-600);
+  color: var(--white);
+}
+.pin-pill.active {
+  background-color: var(--gold-600);
+  border-color: var(--gold-600);
+  color: #1c1305;
+}
+.from-row-label {
+  font-size: 0.8125rem;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+/* ---- Map panel (real satellite map via Leaflet) ---- */
+.map-panel {
+  background-color: var(--slate-900);
+  border: 1px solid var(--slate-800);
+  border-radius: 0.75rem;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+#route-map {
+  width: 100%;
+  height: 460px;
+  background: #0a1420;
+}
+@media (min-width: 768px) {
+  #route-map { height: 560px; }
+}
+/* soft dark vignette so the real imagery still feels framed in the dark/gold UI */
+.map-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px 20px rgba(2, 6, 23, 0.65);
+  z-index: 450;
+}
+.map-instructions {
+  color: var(--slate-500);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 0.9rem 1.25rem;
+  margin: 0;
+  position: relative;
+  z-index: 460;
+  background-color: var(--slate-900);
+}
+
+/* Leaflet chrome, restyled dark/gold */
+.leaflet-control-zoom a {
+  background-color: var(--slate-900) !important;
+  color: var(--gold-400) !important;
+  border-color: var(--slate-700) !important;
+}
+.leaflet-control-zoom a:hover { background-color: var(--slate-800) !important; }
+.leaflet-control-attribution {
+  background-color: rgba(2, 6, 23, 0.75) !important;
+  color: var(--slate-400) !important;
+}
+.leaflet-control-attribution a { color: var(--gold-400) !important; }
+
+/* Pins */
+.gold-pin-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--slate-500);
+  border: 2px solid var(--slate-950);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.15s;
+}
+.gold-pin-icon.is-from,
+.gold-pin-icon.is-to {
+  background: var(--gold-400);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.35);
+}
+.pin-label-tooltip {
+  background-color: rgba(2, 6, 23, 0.85) !important;
+  border: 1px solid var(--slate-700) !important;
+  color: var(--slate-200) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600;
+  padding: 2px 8px !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+}
+.pin-label-tooltip::before { display: none; }
+
+.boat-marker-icon {
+  cursor: grab;
+}
+.boat-marker-icon:active { cursor: grabbing; }
+.boat-marker-icon svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* ---- Fare card ---- */
+.fare-card {
+  background-color: var(--slate-900);
+  border: 1px solid var(--gold-700);
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+}
+.fare-route {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.fare-route .arrow { color: var(--gold-400); }
+.fare-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--gold-300);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: -0.5rem;
+  margin-bottom: 1.25rem;
+}
+.fare-highlight::before { content: "\2728"; }
+.fare-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--slate-800);
+  color: var(--slate-300);
+  font-size: 0.9375rem;
+}
+.fare-row:last-of-type { border-bottom: none; }
+.fare-row strong { color: var(--white); }
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.stepper button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--slate-600);
+  background-color: var(--slate-800);
+  color: var(--white);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.stepper button:hover { border-color: var(--gold-500); }
+.toggle-group {
+  display: flex;
+  gap: 0.5rem;
+}
+.toggle-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--slate-700);
+  background-color: var(--slate-800);
+  color: var(--slate-300);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.toggle-btn.active {
+  background-color: var(--gold-600);
+  border-color: var(--gold-600);
+  color: #1c1305;
+}
+.fare-total {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.08));
+  border: 1px solid var(--gold-700);
+  border-radius: 0.5rem;
+  text-align: center;
+}
+.fare-total-amount {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--gold-400);
+}
+.fare-total-label {
+  color: var(--slate-400);
+  font-size: 0.8125rem;
+  margin-top: 0.25rem;
+}
+.fare-disclaimer {
+  color: var(--slate-500);
+  font-size: 0.8125rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+.fare-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+.fare-actions .btn { flex: 1; padding: 0.75rem 1rem; font-size: 0.9375rem; }
+.fare-placeholder {
+  text-align: center;
+  color: var(--slate-500);
+  padding: 2rem 0;
+}

@@ -128,6 +128,7 @@
   </script>
 
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
 <body>
   <!-- Navigation -->
@@ -146,7 +147,7 @@
         <a href="index.html" class="active">Home</a>
         <a href="tours.html">Tours</a>
         <a href="boat-rentals.html">Boat Rentals</a>
-        <a href="plan-your-trip.html">Plan a Trip</a>
+        <a href="#planner">Plan a Trip</a>
         <a href="wakeboarding.html">Wakeboarding</a>
         <a href="echo-falls.html">Echo Falls</a>
         <a href="echo-lake.html">Echo Lake</a>
@@ -171,7 +172,7 @@
       <a href="index.html" class="active">Home</a>
       <a href="tours.html">Tours</a>
       <a href="boat-rentals.html">Boat Rentals</a>
-      <a href="plan-your-trip.html">Plan a Trip</a>
+      <a href="#planner">Plan a Trip</a>
       <a href="wakeboarding.html">Wakeboarding</a>
       <a href="echo-falls.html">Echo Falls</a>
         <a href="echo-lake.html">Echo Lake</a>
@@ -577,12 +578,80 @@
         </div>
         <p class="locations-note">We also offer service to custom destinations throughout the region</p>
       </div>
+    </div>
+  </section>
 
-      <!-- Plan Your Trip CTA -->
-      <div class="locations-section" style="margin-top: 2rem; text-align: center; border-color: var(--gold-600);">
-        <h2 class="locations-title">Not Sure What It'll Cost?</h2>
-        <p style="color: #94a3b8; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">Pick your route on our interactive map for a rough fare estimate, and check live Howe Sound tide conditions before you head out.</p>
-        <a href="plan-your-trip.html" class="btn" style="background-color: var(--gold-600); color: #1c1305;">Plan Your Trip &amp; Check Tides</a>
+  <!-- Route Planner -->
+  <section class="section" id="planner">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Route &amp; Fare Estimator</h2>
+        <p class="section-subtitle">Tap a pin for your destination, double-tap a pin to start from there, or drag the boat</p>
+      </div>
+
+      <div class="planner-layout">
+        <div>
+          <div class="from-row" id="from-row">
+            <div class="from-row-label">Departing From</div>
+            <!-- pills injected by JS -->
+          </div>
+
+          <div class="map-panel">
+            <div id="route-map" aria-label="Satellite map of Howe Sound with location pins"></div>
+            <p class="map-instructions" id="map-instructions">Boat is at <strong>Squamish</strong>. Tap a pin for your destination, or double-tap a pin to start from there instead.</p>
+          </div>
+        </div>
+
+        <div class="fare-card">
+          <div id="fare-placeholder" class="fare-placeholder">
+            <p>Choose a destination on the map to see a rough fare estimate.</p>
+          </div>
+
+          <div id="fare-content" style="display:none;">
+            <div class="fare-route">
+              <span id="fare-from">Squamish</span>
+              <span class="arrow">&rarr;</span>
+              <span id="fare-to">&mdash;</span>
+            </div>
+            <p class="fare-highlight" id="fare-highlight" style="display:none;"></p>
+
+            <div class="fare-row">
+              <span>Distance</span>
+              <strong id="fare-distance">&mdash;</strong>
+            </div>
+            <div class="fare-row">
+              <span>Est. cruise time</span>
+              <strong id="fare-time">&mdash;</strong>
+            </div>
+            <div class="fare-row">
+              <span>Passengers</span>
+              <div class="stepper">
+                <button type="button" id="pax-minus" aria-label="Fewer passengers">&minus;</button>
+                <strong id="pax-count">1</strong>
+                <button type="button" id="pax-plus" aria-label="More passengers">&plus;</button>
+              </div>
+            </div>
+            <div class="fare-row">
+              <span>Trip type</span>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" data-trip="one-way">One-way</button>
+                <button type="button" class="toggle-btn" data-trip="round-trip">Round trip</button>
+              </div>
+            </div>
+
+            <div class="fare-total">
+              <div class="fare-total-amount" id="fare-amount">$0</div>
+              <div class="fare-total-label">Rough estimate &mdash; not a quote</div>
+            </div>
+
+            <p class="fare-disclaimer">This is a rough, distance-based estimate only, following the approximate water route shown on the map. Actual pricing depends on conditions, pickup points, and group size, and is always confirmed by phone or text before booking. Includes up to 3 passengers; extra passengers +$25 each (max 6).</p>
+
+            <div class="fare-actions">
+              <a href="tel:+16048498898" class="btn btn-secondary">Call to Book</a>
+              <a href="mailto:squamishwatertaxi@gmail.com" id="request-trip-link" class="btn" style="background-color: var(--gold-600); color: #1c1305;">Request This Trip</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -618,7 +687,7 @@
         </div>
       </div>
 
-      <p style="text-align:center; color: var(--slate-500); font-size: 0.9375rem; margin-top: 2rem;">Planning a specific route? Get a fare estimate on our <a href="plan-your-trip.html" style="color: var(--gold-400);">trip planner</a>.</p>
+      <p style="text-align:center; color: var(--slate-500); font-size: 0.9375rem; margin-top: 2rem;">Planning a specific route? Get a fare estimate on our <a href="#planner" style="color: var(--gold-400);">trip planner</a>.</p>
     </div>
   </section>
 
@@ -796,7 +865,7 @@
             <a href="squamish-boat-tours.html">Squamish Boat Tours</a>
             <a href="tours.html">Tours</a>
             <a href="boat-rentals.html">Boat Rentals</a>
-        <a href="plan-your-trip.html">Plan a Trip</a>
+        <a href="#planner">Plan a Trip</a>
             <a href="echo-falls.html">Echo Falls</a>
         <a href="echo-lake.html">Echo Lake</a>
             <a href="blog.html">Blog</a>
@@ -837,6 +906,8 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/trip-planner.js?v=12"></script>
   <script src="js/tide-tracker.js"></script>
 </body>
 </html>
