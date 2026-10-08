@@ -6,6 +6,9 @@
    ever talks to the Worker - the CRM ingest key never reaches this file.
 
    Any element with a data-open-chat attribute opens the panel.
+   Also embedded on the sister sites (strandedonthe99, squamish-boat-rentals,
+   squamishsboatrentals, squamish-kayaking) from this URL, so every color
+   var() carries a fallback for pages without this site's CSS.
    ========================================================================== */
 
 (function () {
