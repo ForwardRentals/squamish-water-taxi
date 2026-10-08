@@ -1,3 +1,20 @@
+// Copies a form submission into the CRM via the swt-chat Worker's /lead
+// route (the Worker holds the CRM ingest key). Fire-and-forget: the
+// Web3Forms email still goes out and is what the visitor's success message
+// depends on, so a CRM hiccup never blocks or fails a submission.
+const CRM_LEAD_ENDPOINT = 'https://swt-chat.thefulltimehobby.workers.dev/lead';
+const SERVICE_LABELS = { 'water-taxi': 'Water Taxi', 'boat-rental': 'Boat Rental', 'both': 'Water Taxi + Boat Rental', 'inquiry': 'Other' };
+function sendToCrm(fields) {
+  try {
+    fetch(CRM_LEAD_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fields),
+      keepalive: true
+    }).catch(function () {});
+  } catch (e) {}
+}
+
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -32,6 +49,15 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
 
       const formData = new FormData(contactForm);
+      sendToCrm({
+        source: 'contact-form',
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        service: SERVICE_LABELS[formData.get('service')] || formData.get('service'),
+        date: formData.get('date'),
+        message: formData.get('message')
+      });
       formData.append('access_key', 'a3e9ea73-311f-492a-85d4-c26d8d5b33bb');
       formData.append('subject', 'New Website Inquiry - Squamish Water Taxi');
       formData.append('from_name', 'Squamish Water Taxi Website');
@@ -70,6 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
 
       const formData = new FormData(subscribeForm);
+      if (!formData.get('botcheck')) {
+        sendToCrm({
+          source: 'updates-signup-form',
+          email: formData.get('email'),
+          message: 'Signed up for Highway 99 emergency response updates'
+        });
+      }
       submitBtn.disabled = true;
       submitBtn.textContent = 'Subscribing...';
       subscribeMessage.textContent = '';
