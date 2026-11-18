@@ -479,5 +479,14 @@
 
   <script src="js/main.js"></script>
   <script src="js/chat.js" defer></script>
+<script src="https://rentedlocal.com/rented-local-widget.js" data-embed-keys="squamish-water-taxi-ee874a,squamish-water-taxi-11c018,squamish-water-taxi-f2f057,squamish-water-taxi-3b9b99" data-embed-auto="false" defer></script>
+  <script>
+  // Book buttons open the Rented Local booking popup (all tours + rentals). If the popup
+  // script isn't available the link's normal href is used as a fallback.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-rl-book]');
+    if (a && window.RentedLocal && window.RentedLocal.menu) { e.preventDefault(); window.RentedLocal.open(); }
+  });
+  </script>
 </body>
 </html>

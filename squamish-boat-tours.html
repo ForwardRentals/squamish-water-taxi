@@ -422,7 +422,7 @@
     <div class="echo-hero-content">
       <h1 class="echo-hero-title">Squamish Boat Tours</h1>
       <p class="echo-hero-subtitle">Private guided boat tours departing right from Squamish, BC - fjord walls, wildlife, and a local captain who knows the Sound</p>
-      <a href="https://rentedlocal.com/gear/howe-sound-tour-squamish-bc--6a7b63b67965a443592cb608" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Book Your Tour</a>
+      <a data-rl-book href="https://rentedlocal.com/gear/howe-sound-tour-squamish-bc--6a7b63b67965a443592cb608" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Book Your Tour</a>
     </div>
   </section>
 
@@ -454,7 +454,7 @@
             <li>Local captain, local knowledge</li>
             <li>Great intro trip for first-timers</li>
           </ul>
-          <a href="https://rentedlocal.com/gear/howe-sound-tour-squamish-bc--6a7b63b67965a443592cb608" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Book This Tour</a>
+          <a data-rl-book href="https://rentedlocal.com/gear/howe-sound-tour-squamish-bc--6a7b63b67965a443592cb608" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Book This Tour</a>
         </div>
 
         <div class="tour-tier featured">
@@ -469,7 +469,7 @@
             <li>Route built around what you want to see</li>
             <li>Room for larger groups</li>
           </ul>
-          <a href="contact.html" class="btn btn-primary">Book This Tour</a>
+          <a data-rl-book href="contact.html" class="btn btn-primary">Book This Tour</a>
         </div>
 
         <div class="tour-tier">
@@ -560,7 +560,7 @@
       <div class="highlight-box" style="margin-top: 3rem;">
         <h3>Ready For Your Squamish Boat Tour?</h3>
         <p style="margin-bottom: 1.5rem;">Call or message us with your date and group size - we'll take care of the rest.</p>
-        <a href="contact.html" class="btn btn-primary" style="margin-right: 0.75rem;">Book a Tour</a>
+        <a data-rl-book href="contact.html" class="btn btn-primary" style="margin-right: 0.75rem;">Book a Tour</a>
         <a href="tel:+16048498898" class="btn btn-secondary">(604) 849-8898</a>
       </div>
 
@@ -632,5 +632,14 @@
 
   <script src="js/main.js"></script>
   <script src="js/chat.js" defer></script>
+<script src="https://rentedlocal.com/rented-local-widget.js" data-embed-keys="squamish-water-taxi-ee874a,squamish-water-taxi-11c018,squamish-water-taxi-f2f057,squamish-water-taxi-3b9b99" data-embed-auto="false" defer></script>
+  <script>
+  // Book buttons open the Rented Local booking popup (all tours + rentals). If the popup
+  // script isn't available the link's normal href is used as a fallback.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-rl-book]');
+    if (a && window.RentedLocal && window.RentedLocal.menu) { e.preventDefault(); window.RentedLocal.open(); }
+  });
+  </script>
 </body>
 </html>

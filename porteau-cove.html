@@ -357,7 +357,7 @@
     <div class="echo-hero-content">
       <h1 class="echo-hero-title">Porteau Cove Boat Tours</h1>
       <p class="echo-hero-subtitle">Sunrise and sunset wildlife tours departing directly from Porteau Cove - golden-hour light on Howe Sound, 45 minutes from Vancouver</p>
-      <a href="contact.html" class="btn btn-primary">Book Your Tour</a>
+      <a data-rl-book href="contact.html" class="btn btn-primary">Book Your Tour</a>
     </div>
   </section>
 
@@ -381,14 +381,14 @@
           <h3>&#127749; Sunrise Tours</h3>
           <p>Glass-calm water, mist lifting off the Sound, and the fjord to yourself before the day begins. Wildlife is at its most active in the early hours - this is the photographers' pick.</p>
           <p class="tour-time-price">From $375 for up to 3 guests</p>
-          <a href="contact.html" class="btn btn-primary">Book Sunrise</a>
+          <a data-rl-book href="contact.html" class="btn btn-primary">Book Sunrise</a>
         </div>
 
         <div class="tour-time-card">
           <h3>&#127751; Sunset Tours</h3>
           <p>Porteau Cove faces west across Howe Sound, and from the water the show is even better - alpenglow on the granite walls, golden light down the fjord, and the run home under a painted sky.</p>
           <p class="tour-time-price">From $375 for up to 3 guests</p>
-          <a href="contact.html" class="btn btn-primary">Book Sunset</a>
+          <a data-rl-book href="contact.html" class="btn btn-primary">Book Sunset</a>
         </div>
       </div>
 
@@ -459,7 +459,7 @@
       <div class="highlight-box" style="margin-top: 3rem;">
         <h3>Catch the Light</h3>
         <p style="margin-bottom: 1.5rem;">Tell us your date and whether you're a sunrise crew or a sunset crew - we'll take care of the rest.</p>
-        <a href="contact.html" class="btn btn-primary" style="margin-right: 0.75rem;">Book a Tour</a>
+        <a data-rl-book href="contact.html" class="btn btn-primary" style="margin-right: 0.75rem;">Book a Tour</a>
         <a href="tel:+16048498898" class="btn btn-secondary">(604) 849-8898</a>
       </div>
 
@@ -531,5 +531,14 @@
 
   <script src="js/main.js"></script>
   <script src="js/chat.js" defer></script>
+<script src="https://rentedlocal.com/rented-local-widget.js" data-embed-keys="squamish-water-taxi-ee874a,squamish-water-taxi-11c018,squamish-water-taxi-f2f057,squamish-water-taxi-3b9b99" data-embed-auto="false" defer></script>
+  <script>
+  // Book buttons open the Rented Local booking popup (all tours + rentals). If the popup
+  // script isn't available the link's normal href is used as a fallback.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-rl-book]');
+    if (a && window.RentedLocal && window.RentedLocal.menu) { e.preventDefault(); window.RentedLocal.open(); }
+  });
+  </script>
 </body>
 </html>
