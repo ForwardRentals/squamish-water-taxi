@@ -126,4 +126,54 @@
     <lastmod>2026-11-18</lastmod>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/destinations.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-anvil-island.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-mcnab-creek.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-ekins-point.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-gambier-island.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-gibsons.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-britannia-beach.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-lions-bay.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-horseshoe-bay.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://squamishwatertaxi.com/water-taxi-squamish-to-vancouver.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

@@ -530,5 +530,17 @@
     }
   }
 
+  /* ---- Deep links: /?from=squamish&to=anvil#planner (used by destination pages) ---- */
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    var qFrom = qs.get("from"), qTo = qs.get("to");
+    if (qFrom && byId(qFrom)) state.fromId = qFrom;
+    if (qTo && byId(qTo) && qTo !== state.fromId) state.toId = qTo;
+    if (qs.get("trip") === "round-trip") {
+      state.tripType = "round-trip";
+      toggleBtns.forEach(function (b) { b.classList.toggle("active", b.dataset.trip === "round-trip"); });
+    }
+  } catch (e) { /* old browsers: ignore */ }
+
   render();
 })();
